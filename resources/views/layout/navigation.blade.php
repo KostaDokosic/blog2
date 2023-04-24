@@ -7,20 +7,35 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li ass="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/createpost">Create post</a>
-                <li ass="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/signin">Sign in</a>
-                </li>
-                <li ass="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/signup">Sign up</a>
-                </li>
-                </li>
+                @auth
+                    <li ass="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/createpost">Create post</a>
+                    </li>
+                    <li ass="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/signout">Sign out</a>
+                    </li>
+                @endauth
+                @if (!auth()->check())
+                    <li ass="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/signin">Sign in</a>
+                    </li>
+                    <li ass="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/signup">Sign up</a>
+                    </li>
+                @endif
+
+
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <div class="d-flex">
+                @auth
+                    <h4>
+                        {{ auth()->user()->name }}
+                    </h4>
+                @endauth
+                @if (!auth()->check())
+                    Not Authentificated
+                @endif
+            </div>
         </div>
     </div>
 </nav>
