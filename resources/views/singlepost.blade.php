@@ -6,6 +6,11 @@
         <h1 class="mt-2">{{ $post->title }}</h1>
         <img class="mt-5" src="{{ $post->image_url }}" alt="PostImage">
         <p class="mt-5">{{ $post->body }}</p>
+        <ul>
+            @foreach ($post->tags as $tag)
+                <li>{{ $tag->name }}</li>
+            @endforeach
+        </ul>
     </div>
 
     <form action="createcomment" method="POST" class="mt-5">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\CreatePostMail;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,8 +49,12 @@ class PostsController extends Controller
         $post->user()->associate($user);
         $post->save();
 
+        foreach($request->tags as $tagId) {
+            $post->tags()->attach($tagId);
+        }
+
         $mailData = $post->only('title', 'body', 'image_url');
-        Mail::to($user->email)->send(new CreatePostMail($mailData));
+        // Mail::to($user->email)->send(new CreatePostMail($mailData));
 
         return redirect('createpost')->with('status', 'Post created successfully');
     }
@@ -91,7 +96,8 @@ class PostsController extends Controller
     }
 
     public function createPost() {
-        return view('createpost');
+        $tags = Tag::all();
+        return view('createpost', compact('tags'));
     }
 
     public function getUserPosts($id) {
