@@ -26,6 +26,8 @@ Route::post('/signin', [AuthController::class, 'signIn']);
 Route::post('/signup', [AuthController::class, 'signUp']);
 Route::get('/signout', [AuthController::class, 'signOut']);
 
+
+Route::post('/editcomment', [CommentsController::class, 'update'])->middleware('auth');
 Route::get('/createpost', [PostsController::class, 'createPost'])->middleware('auth');
 Route::post('/create', [PostsController::class, 'store'])->middleware('auth');
 Route::post('/createcomment', [CommentsController::class, 'store']);

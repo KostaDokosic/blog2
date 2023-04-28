@@ -65,12 +65,20 @@ class CommentsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'id' => 'required|exists:comments,id',
+            'body' => 'required|min:1'
+        ]);
+
+        $comment = Comment::find($request->id);
+        $comment->body = $request->body;
+        $comment->save();
+
+        return redirect('/'. $comment->post_id)->with('status', 'Comment successfully updated!');
     }
 
     /**
