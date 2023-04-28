@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CreatePostMail;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PostsController extends Controller
 {
@@ -15,7 +18,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::paginate(3);
         foreach ($posts as $post) {
             $post->body = substr($post->body, 0, 100) . '...';
         }
@@ -37,12 +40,16 @@ class PostsController extends Controller
         ]);
 
         $post = new Post();
+        $user = User::find(Auth::user()->id);
 
         $post->title = $request->title;
         $post->body = $request->body;
         $post->image_url = $request->image_url;
-
+        $post->user()->associate($user);
         $post->save();
+
+        $mailData = $post->only('title', 'body', 'image_url');
+        Mail::to($user->email)->send(new CreatePostMail($mailData));
 
         return redirect('createpost')->with('status', 'Post created successfully');
     }
@@ -85,5 +92,10 @@ class PostsController extends Controller
 
     public function createPost() {
         return view('createpost');
+    }
+
+    public function getUserPosts($id) {
+        $posts = Post::where('user_id', $id)->get();
+        return view('posts', compact('posts'));
     }
 }

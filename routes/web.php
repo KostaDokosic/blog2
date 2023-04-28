@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/users', [UsersController::class, 'index']);
+// Route::post('/deleteUser', [UsersController::class, 'destroy']);
+
 Route::get('/signin', [AuthController::class, 'getSignIn']);
 Route::get('/signup', [AuthController::class, 'getSignUp']);
 Route::post('/signin', [AuthController::class, 'signIn']);
@@ -23,7 +27,9 @@ Route::post('/signup', [AuthController::class, 'signUp']);
 Route::get('/signout', [AuthController::class, 'signOut']);
 
 Route::get('/createpost', [PostsController::class, 'createPost'])->middleware('auth');
-Route::post('/create', [PostsController::class, 'store']);
+Route::post('/create', [PostsController::class, 'store'])->middleware('auth');
 Route::post('/createcomment', [CommentsController::class, 'store']);
 Route::get('/', [PostsController::class, 'index']);
 Route::get('/{id}', [PostsController::class, 'show']);
+Route::get('/posts/user/{id}', [PostsController::class, 'getUserPosts']);
+
